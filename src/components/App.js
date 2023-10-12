@@ -12,6 +12,8 @@ function App() {
     //loding erro  ready active finished
     status: "loading",
     index: 0,
+    answer: null,
+    errorM: "",
   };
 
   function reducer(state, action) {
@@ -26,14 +28,17 @@ function App() {
         return {
           ...state,
           status: "error",
+          errorM: action.payload,
         };
       case "start":
         return { ...state, status: "active" };
+      case "newAnswer":
+        return { ...state, answer: action.payload };
       default:
         throw new Error("action uknown");
     }
   }
-  const [{ questions, status, index }, dispatch] = useReducer(
+  const [{ questions, status, index, errorM, answer }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -43,10 +48,13 @@ function App() {
     async function Fetch() {
       try {
         const res = await fetch("http://localhost:9000/questions");
+        console.log(res);
+        if (!res.ok) throw new Error("we couldnt fetch the Data");
+
         const data = await res.json();
         dispatch({ type: "dataRecieved", payload: data });
       } catch (err) {
-        dispatch({ type: "dataFailed" });
+        dispatch({ type: "dataFailed", payload: err.message });
       }
     }
     Fetch();
@@ -56,11 +64,17 @@ function App() {
       <Header />
       <Main>
         {status === "loading" && <Loader />}
-        {status === "error" && <Error />}
+        {status === "error" && <Error errorM={errorM} />}
         {status === "ready" && (
           <StartScreen numQuestion={numQuestion} dispatch={dispatch} />
         )}
-        {status === "active" && <Questions question={questions[index]} />}
+        {status === "active" && (
+          <Questions
+            question={questions[index]}
+            answer={answer}
+            dispatch={dispatch}
+          />
+        )}
       </Main>
     </div>
   );

@@ -1,7 +1,8 @@
-function Error() {
+function Error({ errorM }) {
+  // console.log(errorM);
   return (
     <p className="error">
-      <span>💥</span> There was an error fecthing questions.
+      <span>💥</span> {errorM}
     </p>
   );
 }
