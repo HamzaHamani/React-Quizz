@@ -16,7 +16,7 @@ function Options({ question, answer, dispatch, points }) {
               : ""
           }`}
           onClick={() => {
-            dispatch({ type: "newAnswer", payload: index });
+            dispatch({ type: "newAnswer", payload: index }); //! we send the index to know wich button we clicked on
           }}
         >
           {option}

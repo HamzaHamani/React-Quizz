@@ -35,10 +35,16 @@ function App() {
       case "start":
         return { ...state, status: "active" };
       case "newAnswer":
+        const question = state.questions.at(state.index);
         console.log(action.payload);
         return {
           ...state,
-          answer: action.payload,
+          answer: action.payload, //reciever  index that we clicked on , the answer
+          points:
+            //! checking recieved index we clicked on if it egale to the right answer if so we add points
+            action.payload === question.correctOption
+              ? state.points + question.points
+              : state.points,
         };
       default:
         throw new Error("action uknown");
