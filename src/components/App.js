@@ -14,6 +14,7 @@ function App() {
     index: 0,
     answer: null,
     errorM: "",
+    points: 0,
   };
 
   function reducer(state, action) {
@@ -22,6 +23,7 @@ function App() {
         return {
           ...state,
           questions: action.payload,
+
           status: "ready",
         };
       case "dataFailed":
@@ -33,22 +35,23 @@ function App() {
       case "start":
         return { ...state, status: "active" };
       case "newAnswer":
-        return { ...state, answer: action.payload };
+        console.log(action.payload);
+        return {
+          ...state,
+          answer: action.payload,
+        };
       default:
         throw new Error("action uknown");
     }
   }
-  const [{ questions, status, index, errorM, answer }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ questions, status, index, errorM, answer, points }, dispatch] =
+    useReducer(reducer, initialState);
 
   const numQuestion = questions.length;
   useEffect(() => {
     async function Fetch() {
       try {
         const res = await fetch("http://localhost:9000/questions");
-        console.log(res);
         if (!res.ok) throw new Error("we couldnt fetch the Data");
 
         const data = await res.json();
@@ -73,6 +76,7 @@ function App() {
             question={questions[index]}
             answer={answer}
             dispatch={dispatch}
+            points={points}
           />
         )}
       </Main>
