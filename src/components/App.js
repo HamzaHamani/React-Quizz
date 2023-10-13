@@ -52,6 +52,7 @@ function App() {
               : state.points,
         };
       case "nextQuestion":
+        if (state.index == 14) return { ...state };
         return { ...state, index: state.index + 1, answer: null };
       default:
         throw new Error("action uknown");
@@ -79,6 +80,7 @@ function App() {
     }
     Fetch();
   }, []);
+
   return (
     <div className="app">
       <Header />
